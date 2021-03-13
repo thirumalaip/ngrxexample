@@ -1,4 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { changechannel, customIncrement, decrement, increment, reset } from '../state/counter.action';
+import { CounterState } from '../state/counter.state';
 
 @Component({
   selector: 'app-counter-input',
@@ -6,23 +9,27 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
   styleUrls: ['./counter-input.component.css']
 })
 export class CounterInputComponent implements OnInit {
-  @Output() increment = new EventEmitter<void>();
-  @Output() decrement = new EventEmitter<void>();
-  @Output() reset = new EventEmitter<void>();
-
-  constructor() { }
+  value:number;
+  constructor(private store: Store<{counter: CounterState}>) { }
 
   ngOnInit(): void {
   }
 
   onIncrement() {
-    this.increment.emit();
+    this.store.dispatch(increment())
   }
   onDecrement() {
-    this.decrement.emit();
+    this.store.dispatch(decrement())
   }
   onReset() {
-    this.reset.emit();
+    this.store.dispatch(reset())
+  }
+
+  onAdd() {
+    this.store.dispatch(customIncrement({value: +this.value}))
+  }
+  changeChannel() {
+    this.store.dispatch(changechannel())
   }
 
 }
